@@ -15,7 +15,7 @@ function Create() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(createPlayer({ name, age, club }));
-    navigate("read");
+    navigate("/read");
   }
 
   return (

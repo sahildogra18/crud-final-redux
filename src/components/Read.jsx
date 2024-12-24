@@ -1,19 +1,40 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { showPlayer } from "../features/playerDetailSlice";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  deletePalyer,
+  editPlayer,
+  showPlayer,
+} from "../features/playerDetailSlice";
 
 function Read() {
   let dispatch = useDispatch();
+  let navigate = useNavigate();
 
   const data = useSelector((state) => state.app);
 
   useEffect(() => {
     dispatch(showPlayer());
-  }, [dispatch]);
+  }, []);
+
+  function handleDelete(id) {
+    dispatch(deletePalyer({ id }));
+    dispatch(showPlayer());
+  }
+
+  function sendDataLocalStorage(id, name, club, age) {
+    localStorage.setItem("id", id);
+    localStorage.setItem("name", name);
+    localStorage.setItem("club", club);
+    localStorage.setItem("age", age);
+    navigate("/edit");
+  }
 
   return (
     <>
+      <Link to={"/"}>
+        <button>Get back to create Page</button>
+      </Link>
       <table>
         <thead>
           <tr>
@@ -36,11 +57,28 @@ function Read() {
                   <td>{player.player_club}</td>
                   <td>{player.player_age}</td>
                   <td>
-                    <button>Delete</button>
+                    <button
+                      onClick={() => {
+                        handleDelete(id);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </td>
                   <td>
                     <Link to={"/edit"}>
-                      <button>Edit</button>
+                      <button
+                        onClick={() => {
+                          sendDataLocalStorage(
+                            id,
+                            player.player_name,
+                            player.player_club,
+                            player.player_age
+                          );
+                        }}
+                      >
+                        Edit
+                      </button>
                     </Link>
                   </td>
                 </tr>
